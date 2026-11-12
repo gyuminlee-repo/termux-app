@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.termux.shared.R;
@@ -179,6 +181,22 @@ public final class ExtraKeysView extends GridLayout {
 
     /** Defines whether text for the extra keys button should be all capitalized automatically. */
     protected boolean mButtonTextAllCaps = true;
+
+    /**
+     * The smallest text size, in scaled pixels, a grid button label may shrink to when the button
+     * is too narrow to hold the text at {@link #mButtonTextSize}.
+     */
+    public static final float MIN_BUTTON_TEXT_SIZE_SP = 6;
+
+    /**
+     * The largest text size, in scaled pixels, for an extra keys button label. Grid buttons shrink
+     * below this on their own, down to {@link #MIN_BUTTON_TEXT_SIZE_SP}, when the label would not
+     * otherwise fit. Defaults to {@link #DEFAULT_BUTTON_TEXT_SIZE_SP}.
+     */
+    protected float mButtonTextSize = DEFAULT_BUTTON_TEXT_SIZE_SP;
+
+    /** The default value for {@link #mButtonTextSize}. */
+    public static final float DEFAULT_BUTTON_TEXT_SIZE_SP = 14;
 
 
     /**
@@ -332,6 +350,24 @@ public final class ExtraKeysView extends GridLayout {
         mButtonTextAllCaps = buttonTextAllCaps;
     }
 
+    /** Set {@link #mButtonTextSize}. */
+    public void setButtonTextSize(float buttonTextSize) {
+        mButtonTextSize = buttonTextSize;
+    }
+
+    /**
+     * Size the label of a button that sits in the grid. The grid gives every column the same width,
+     * so a row with many keys leaves each label little room. Auto sizing lets the label shrink to
+     * fit that room instead of being cut off, which is what happens otherwise since the buttons set
+     * no ellipsize or auto size behaviour of their own.
+     */
+    protected void setGridButtonTextSize(@NonNull MaterialButton button) {
+        button.setMaxLines(1);
+        float max = Math.max(mButtonTextSize, MIN_BUTTON_TEXT_SIZE_SP);
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(button,
+            (int) MIN_BUTTON_TEXT_SIZE_SP, (int) Math.ceil(max), 1, TypedValue.COMPLEX_UNIT_SP);
+    }
+
 
     /** Get {@link #mLongPressTimeout}. */
     public int getLongPressTimeout() {
@@ -413,6 +449,7 @@ public final class ExtraKeysView extends GridLayout {
                 button.setTextColor(mButtonTextColor);
                 button.setAllCaps(mButtonTextAllCaps);
                 button.setPadding(0, 0, 0, 0);
+                setGridButtonTextSize(button);
 
                 button.setOnClickListener(view -> {
                     performExtraKeyButtonHapticFeedback(view, buttonInfo, button);
@@ -599,6 +636,9 @@ public final class ExtraKeysView extends GridLayout {
         }
         button.setText(extraButton.getDisplay());
         button.setAllCaps(mButtonTextAllCaps);
+        // The popup button sizes itself to its text, so it has the room the grid buttons lack and
+        // takes the size directly instead of auto sizing.
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, mButtonTextSize);
         button.setPadding(0, 0, 0, 0);
         button.setMinHeight(0);
         button.setMinWidth(0);

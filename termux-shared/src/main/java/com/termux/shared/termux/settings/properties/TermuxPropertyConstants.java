@@ -265,6 +265,17 @@ public final class TermuxPropertyConstants {
     public static final float IVALUE_TERMINAL_TOOLBAR_HEIGHT_SCALE_FACTOR_MAX = 3;
     public static final float DEFAULT_IVALUE_TERMINAL_TOOLBAR_HEIGHT_SCALE_FACTOR = 1;
 
+    /**
+     * Defines the key for the largest text size, in scaled pixels, that an extra keys button label
+     * may use. Labels shrink below this value on their own when a button is too narrow to hold the
+     * text, down to {@link com.termux.shared.termux.extrakeys.ExtraKeysView#MIN_BUTTON_TEXT_SIZE_SP}.
+     * Lowering this makes every label smaller, which fits more keys in a row on a narrow screen.
+     */
+    public static final String KEY_EXTRA_KEYS_TEXT_SIZE =  "extra-keys-text-size"; // Default: "extra-keys-text-size"
+    public static final float IVALUE_EXTRA_KEYS_TEXT_SIZE_MIN = 6;
+    public static final float IVALUE_EXTRA_KEYS_TEXT_SIZE_MAX = 24;
+    public static final float DEFAULT_IVALUE_EXTRA_KEYS_TEXT_SIZE = 14;
+
 
 
 
@@ -415,6 +426,7 @@ public final class TermuxPropertyConstants {
         KEY_TERMINAL_TRANSCRIPT_ROWS,
 
         /* float */
+        KEY_EXTRA_KEYS_TEXT_SIZE,
         KEY_TERMINAL_TOOLBAR_HEIGHT_SCALE_FACTOR,
 
         /* Integer */

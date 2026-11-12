@@ -275,6 +275,8 @@ public abstract class TermuxSharedProperties {
                 return (int) getTerminalTranscriptRowsInternalPropertyValueFromValue(value);
 
             /* float */
+            case TermuxPropertyConstants.KEY_EXTRA_KEYS_TEXT_SIZE:
+                return (float) getExtraKeysTextSizeInternalPropertyValueFromValue(value);
             case TermuxPropertyConstants.KEY_TERMINAL_TOOLBAR_HEIGHT_SCALE_FACTOR:
                 return (float) getTerminalToolbarHeightScaleFactorInternalPropertyValueFromValue(value);
 
@@ -447,6 +449,24 @@ public abstract class TermuxSharedProperties {
      * @param value The {@link String} value to convert.
      * @return Returns the internal value for value.
      */
+    /**
+     * Returns the float for the value if its not null and is between
+     * {@link TermuxPropertyConstants#IVALUE_EXTRA_KEYS_TEXT_SIZE_MIN} and
+     * {@link TermuxPropertyConstants#IVALUE_EXTRA_KEYS_TEXT_SIZE_MAX},
+     * otherwise returns {@link TermuxPropertyConstants#DEFAULT_IVALUE_EXTRA_KEYS_TEXT_SIZE}.
+     *
+     * @param value The {@link String} value to convert.
+     * @return Returns the internal value for value.
+     */
+    public static float getExtraKeysTextSizeInternalPropertyValueFromValue(String value) {
+        return SharedProperties.getDefaultIfNotInRange(TermuxPropertyConstants.KEY_EXTRA_KEYS_TEXT_SIZE,
+            DataUtils.getFloatFromString(value, TermuxPropertyConstants.DEFAULT_IVALUE_EXTRA_KEYS_TEXT_SIZE),
+            TermuxPropertyConstants.DEFAULT_IVALUE_EXTRA_KEYS_TEXT_SIZE,
+            TermuxPropertyConstants.IVALUE_EXTRA_KEYS_TEXT_SIZE_MIN,
+            TermuxPropertyConstants.IVALUE_EXTRA_KEYS_TEXT_SIZE_MAX,
+            true, true, LOG_TAG);
+    }
+
     public static float getTerminalToolbarHeightScaleFactorInternalPropertyValueFromValue(String value) {
         return SharedProperties.getDefaultIfNotInRange(TermuxPropertyConstants.KEY_TERMINAL_TOOLBAR_HEIGHT_SCALE_FACTOR,
             DataUtils.getFloatFromString(value, TermuxPropertyConstants.DEFAULT_IVALUE_TERMINAL_TOOLBAR_HEIGHT_SCALE_FACTOR),
@@ -652,6 +672,10 @@ public abstract class TermuxSharedProperties {
 
     public int getTerminalTranscriptRows() {
         return (int) getInternalPropertyValue(TermuxPropertyConstants.KEY_TERMINAL_TRANSCRIPT_ROWS, true);
+    }
+
+    public float getExtraKeysTextSize() {
+        return (float) getInternalPropertyValue(TermuxPropertyConstants.KEY_EXTRA_KEYS_TEXT_SIZE, true);
     }
 
     public float getTerminalToolbarHeightScaleFactor() {
