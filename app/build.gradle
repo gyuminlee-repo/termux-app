@@ -124,7 +124,12 @@ android {
 
     packagingOptions {
         jniLibs {
-            useLegacyPackaging true
+            // Some Android 15 and later devices run on 16 KB pages and refuse a native library
+            // whose LOAD segments are not 16 KB aligned. Legacy packaging stores the libraries
+            // compressed and lets the installer extract them, which loses the 0x4000 alignment the
+            // linker produced, and the system then warns that the app is not 16 KB compatible.
+            // Storing them uncompressed keeps that alignment.
+            useLegacyPackaging false
         }
     }
 
